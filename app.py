@@ -15,12 +15,14 @@ if uploaded_file is not None:
     metric = st.sidebar.selectbox("Select KPI", ["Total Revenue", "Gross Profit", "Operating Income", "Net Income"])
     margin = st.sidebar.selectbox("Select Margin", ["Gross Margin (%)", "Operating Margin (%)", "Net Margin (%)", "FCF Margin (%)"])
 
-    min_year = int(kpi_df["Fiscal Year"].min())
-    max_year = int(kpi_df["Fiscal Year"].max())
+   # Extract numeric year from Fiscal Year (e.g., 'FY2014' → 2014)
+    kpi_df["Year"] = kpi_df["Fiscal Year"].str.replace("FY", "").astype(int)
+    min_year = int(kpi_df["Year"].min())
+    max_year = int(kpi_df["Year"].max())
     year_range = st.sidebar.slider("Select Fiscal Year Range", min_year, max_year, (min_year, max_year))
 
     # Filter data
-    df_filtered = kpi_df[(kpi_df["Fiscal Year"] >= year_range[0]) & (kpi_df["Fiscal Year"] <= year_range[1])]
+    df_filtered = kpi_df[(kpi_df["Year"] >= year_range[0]) & (kpi_df["Year"] <= year_range[1])]
 
     # KPI Chart
     st.subheader(f"{metric} Over Time")
